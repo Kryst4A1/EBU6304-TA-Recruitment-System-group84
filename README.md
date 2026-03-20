@@ -8,13 +8,12 @@
 ## Group Name-list
 *Software Engineering group project for EBU6304*
 
-- Kryst4A1:231224468 (Lead)
-- Tang Zijun:231224181 (Member)
-- Sshuu1:231224963 (Member)
-- Cheng Yutian:231224424 (Member)
-- Meng Sicheng:231224240  (Member)
-- wallacewang886:231224158 (Member)
-
+-Kryst4A1:231224468 (Lead)
+-ZJ-Tang:231224181 (Member)
+-Sshuu1:231224963 (Member)
+-chengdatian:231224424 (Member)
+-Meng-1211:23122 (Member)
+-wallacewang88:231224158 (Member)
 ---
 
 ## 1. Project Overview
