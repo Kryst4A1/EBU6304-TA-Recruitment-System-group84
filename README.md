@@ -1,4 +1,5 @@
 # EBU6304-TA-Recruitment-System-group84
+（Kryst4A1：231224468 （Lead））
 ## BUPT International School Teaching Assistant Recruitment System
 *Queen Mary University of London | School of Electronic Engineering and Computer Science*  
 *EBU6304 Software Engineering Group Project | Coursework Weight: 35% of Total Module Grade*  
@@ -9,11 +10,11 @@
 *Software Engineering group project for EBU6304*
 
 - Kryst4A1:231224468 (Lead)
-- Tang Zijun:231224181 (Member)
+- ZJ-Tang:231224181 (Member)
 - Sshuu1:231224963 (Member)
-- Cheng Yutian:231224424 (Member)
-- Meng Sicheng:231224240  (Member)
-- wallacewang886:231224158 (Member)
+- chengdatian:231224424 (Member)
+- Meng-1211:23122  (Member)
+- wallacewang88:231224158 (Member)
 
 ---
 
