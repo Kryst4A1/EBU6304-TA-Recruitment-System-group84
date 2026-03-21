@@ -8,6 +8,7 @@
 ## Group Name-list
 *Software Engineering group project for EBU6304*
 
+- xuanxuanzhu77733-dotcom: 2025010108(Support TA)
 - Kryst4A1:231224468 (Lead)
 - ZJ-Tang:231224181 (Member)
 - Sshuu1:231224963 (Member)
