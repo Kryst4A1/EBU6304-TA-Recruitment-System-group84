@@ -1,0 +1,64 @@
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 数据处理类
+ * 负责JSON/CSV文件的读写，纯文本解析，无第三方库依赖
+ * Sprint1 实现基础的JSON对象写入和CSV文件追加
+ */
+public class DataHandler {
+    /**
+     * 保存TA档案为JSON文件（单文件单用户，按学号命名）
+     * 纯文本拼接JSON格式，无第三方库
+     */
+    public static boolean saveTAProfile(Map<String, String> profile) {
+        String studentId = profile.get("studentId");
+        String fileName = Utils.DATA_DIR + "ta_profile_" + studentId + ".json";
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+            // 拼接JSON字符串
+            StringBuilder json = new StringBuilder();
+            json.append("{\n");
+            json.append("  \"studentId\": \"").append(profile.get("studentId")).append("\",\n");
+            json.append("  \"name\": \"").append(profile.get("name")).append("\",\n");
+            json.append("  \"major\": \"").append(profile.get("major")).append("\",\n");
+            json.append("  \"phone\": \"").append(profile.get("phone")).append("\",\n");
+            json.append("  \"cvPath\": \"").append(profile.get("cvPath")).append("\",\n");
+            json.append("  \"createTime\": \"").append(profile.get("createTime")).append("\"\n");
+            json.append("}");
+            // 写入文件
+            bw.write(json.toString());
+            bw.flush();
+            System.out.println("【成功】TA档案已保存：" + fileName);
+            return true;
+        } catch (IOException e) {
+            System.out.println("【错误】TA档案保存失败：" + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 发布岗位，追加至CSV文件
+     */
+    public static boolean publishJob(String jobInfo) {
+        String fileName = Utils.DATA_DIR + "job_list.csv";
+        // 检查文件是否存在，不存在则写入表头
+        File file = new File(fileName);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+            if (!file.exists() || file.length() == 0) {
+                // 写入CSV表头
+                bw.write("岗位ID,岗位名称,岗位要求,招聘人数,截止日期,发布人");
+                bw.newLine();
+            }
+            // 追加岗位信息
+            bw.write(jobInfo);
+            bw.newLine();
+            bw.flush();
+            System.out.println("【成功】岗位已发布，保存至：" + fileName);
+            return true;
+        } catch (IOException e) {
+            System.out.println("【错误】岗位发布失败：" + e.getMessage());
+            return false;
+        }
+    }
+}
