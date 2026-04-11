@@ -1,62 +1,76 @@
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+
 /**
- * 通用工具类
- * 提供系统初始化、输入校验、界面提示等功能
+ * Utility class for system initialization, time formatting, file reading, and validation
  */
 public class Utils {
-    // 数据存储根目录
-    public static final String DATA_DIR = "data/";
+    public static final String DATA_FOLDER = "data/";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * 初始化系统：创建data目录
-     */
+    // Initialize data directory
     public static void initSystem() {
-        File dir = new File(DATA_DIR);
-        if (!dir.exists()) {
-            boolean createSuccess = dir.mkdir();
-            if (createSuccess) {
-                System.out.println("【系统】数据目录创建成功：" + DATA_DIR);
-            } else {
-                System.out.println("【错误】数据目录创建失败，请检查权限！");
-            }
+        File directory = new File(DATA_FOLDER);
+        if (!directory.exists()) {
+            directory.mkdir();
         }
     }
 
-    /**
-     * 返回到上一级菜单的提示
-     */
-    public static void backToMenu(Scanner scanner) {
-        System.out.print("按回车键返回上一级菜单...");
+    // Get formatted current time
+    public static String getCurrentTime() {
+        return DATE_FORMAT.format(new Date());
+    }
+
+    // Read all lines from a text/CSV file
+    public static List<String> readFileLines(String filePath) {
+        try {
+            return Files.readAllLines(new File(filePath).toPath());
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    // Get maximum job ID for auto-increment
+    public static int getMaxJobId() {
+        List<String> lines = readFileLines(DATA_FOLDER + "job_list.csv");
+        int maxId = 1000;
+        if (lines == null || lines.size() <= 1) return maxId;
+
+        for (int i = 1; i < lines.size(); i++) {
+            try {
+                String idStr = lines.get(i).split(",")[0].replace("J", "");
+                int id = Integer.parseInt(idStr);
+                if (id > maxId) maxId = id;
+            } catch (Exception ignored) {}
+        }
+        return maxId;
+    }
+
+    // Check if string is empty
+    public static boolean isEmpty(String text) {
+        return text == null || text.trim().isEmpty();
+    }
+
+    // Validate CV file format (only .txt and .csv allowed)
+    public static boolean validateCVFormat(String path) {
+        return path.endsWith(".txt") || path.endsWith(".csv");
+    }
+
+    // Validate CV file size (<= 10MB)
+    public static boolean validateCVSize(String path) {
+        File file = new File(path);
+        return file.exists() && file.length() <= 10 * 1024 * 1024;
+    }
+
+    // Press Enter to return to menu
+    public static void pressEnterToReturn(Scanner scanner) {
+        System.out.print("\nPress Enter to go back...");
         scanner.nextLine();
-        scanner.nextLine(); // 吸收换行符
-        System.out.println("======================================");
-    }
-
-    /**
-     * 非空字符串校验
-     */
-    public static boolean isEmpty(String str) {
-        return str == null || str.trim().length() == 0;
-    }
-
-    /**
-     * 文件格式校验（仅支持TXT/CSV）
-     */
-    public static boolean checkFileFormat(String filePath) {
-        return filePath.endsWith(".txt") || filePath.endsWith(".csv");
-    }
-
-    /**
-     * 文件大小校验（≤10MB）
-     */
-    public static boolean checkFileSize(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            return false;
-        }
-        // 10MB = 10 * 1024 * 1024 字节
-        long maxSize = 10 * 1024 * 1024;
-        return file.length() <= maxSize;
+        scanner.nextLine();
     }
 }
