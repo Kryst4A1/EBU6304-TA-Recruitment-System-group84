@@ -1,201 +1,429 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
 
 public class RecruitmentUI extends JFrame {
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
+    private JPanel contentPane;
+    private CardLayout mainCardLayout;
+    private JPanel functionPanel;
 
-    // Main Panel
-    private JPanel panelMain;
-    private JButton btnTA, btnMO, btnAdmin, btnExit;
+    // UI 输出组件升级：支持文本和表格的双重展示
+    private JTextArea taDisplay, moDisplay;
+    private JTable taTable, moTable;
+    private DefaultTableModel taTableModel, moTableModel;
 
-    // TA Panel
-    private JPanel panelTA;
-    private JButton btnCreateProfile, btnUploadCV, btnBackTA;
-
-    // MO Panel
-    private JPanel panelMO;
-    private JButton btnPublishJob, btnBackMO;
+    // 全局统一字体配置
+    private final Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 18);
+    private final Font NORMAL_FONT = new Font("SansSerif", Font.PLAIN, 14);
 
     public RecruitmentUI() {
-        initSystem();
-        initFrame();
-        initPanels();
-        addListeners();
-    }
+        setTitle("BUPT International School TA Recruitment System");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(950, 650);
+        setLocationRelativeTo(null); // 窗口居中
 
-    // Initialize system folder
-    private void initSystem() {
+        contentPane = new JPanel(new BorderLayout(15, 15));
+        contentPane.setBorder(new EmptyBorder(15, 15, 15, 15));
+        setContentPane(contentPane);
+
+        // 1. 顶部角色选择栏
+        JPanel rolePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        rolePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.LIGHT_GRAY));
+        JButton btnTA = new JButton("Switch to TA Role");
+        JButton btnMO = new JButton("Switch to MO Role");
+        btnTA.setFont(TITLE_FONT);
+        btnMO.setFont(TITLE_FONT);
+        rolePanel.add(btnTA);
+        rolePanel.add(btnMO);
+        contentPane.add(rolePanel, BorderLayout.NORTH);
+
+        // 2. 主功能区
+        mainCardLayout = new CardLayout();
+        functionPanel = new JPanel(mainCardLayout);
+        functionPanel.add(createTAModule(), "TA_MODULE");
+        functionPanel.add(createMOModule(), "MO_MODULE");
+        contentPane.add(functionPanel, BorderLayout.CENTER);
+
+        // 3. 角色切换事件
+        btnTA.addActionListener(e -> mainCardLayout.show(functionPanel, "TA_MODULE"));
+        btnMO.addActionListener(e -> mainCardLayout.show(functionPanel, "MO_MODULE"));
+
+        // 4. 初始化系统
         Utils.initSystem();
+        mainCardLayout.show(functionPanel, "TA_MODULE");
     }
 
-    // Main window setup
-    private void initFrame() {
-        setTitle("BUPT International College TA Recruitment System");
-        setSize(600, 500);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-        add(mainPanel);
-    }
+    // ===================== TA模块 =====================
+    private JPanel createTAModule() {
+        JPanel taModule = new JPanel(new BorderLayout(15, 15));
 
-    // Initialize all UI panels
-    private void initPanels() {
-        // Main Panel
-        panelMain = new JPanel();
-        panelMain.setLayout(new GridLayout(5, 1, 20, 20));
-        panelMain.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
-        btnTA = new JButton("1. TA (Applicant)");
-        btnMO = new JButton("2. MO (Module Organizer)");
-        btnAdmin = new JButton("3. Admin (Not Available)");
-        btnExit = new JButton("4. Exit System");
-        panelMain.add(btnTA);
-        panelMain.add(btnMO);
-        panelMain.add(btnAdmin);
-        panelMain.add(btnExit);
+        // 顶部按钮区
+        JPanel taBtnPanel = new JPanel(new GridLayout(1, 5, 10, 10));
+        JButton btnCreateProfile = new JButton("1. Profile");
+        JButton btnUploadCV = new JButton("2. Upload CV");
+        JButton btnViewJobs = new JButton("3. View Jobs");
+        JButton btnApplyJob = new JButton("4. Apply");
+        JButton btnCheckStatus = new JButton("5. Status");
 
-        // TA Panel
-        panelTA = new JPanel();
-        panelTA.setLayout(new GridLayout(4, 1, 20, 20));
-        panelTA.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
-        btnCreateProfile = new JButton("Create Personal Profile");
-        btnUploadCV = new JButton("Upload CV File");
-        btnBackTA = new JButton("Back to Main");
-        panelTA.add(btnCreateProfile);
-        panelTA.add(btnUploadCV);
-        panelTA.add(btnBackTA);
-
-        // MO Panel
-        panelMO = new JPanel();
-        panelMO.setLayout(new GridLayout(3, 1, 20, 20));
-        panelMO.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
-        btnPublishJob = new JButton("Publish TA Position");
-        btnBackMO = new JButton("Back to Main");
-        panelMO.add(btnPublishJob);
-        panelMO.add(btnBackMO);
-
-        // Add panels to CardLayout
-        mainPanel.add(panelMain, "main");
-        mainPanel.add(panelTA, "ta");
-        mainPanel.add(panelMO, "mo");
-    }
-
-    // Button actions
-    private void addListeners() {
-        // Main menu
-        btnTA.addActionListener(e -> cardLayout.show(mainPanel, "ta"));
-        btnMO.addActionListener(e -> cardLayout.show(mainPanel, "mo"));
-        btnAdmin.addActionListener(e -> JOptionPane.showMessageDialog(this, "Admin module is under development."));
-        btnExit.addActionListener(e -> System.exit(0));
-
-        // Back buttons
-        btnBackTA.addActionListener(e -> cardLayout.show(mainPanel, "main"));
-        btnBackMO.addActionListener(e -> cardLayout.show(mainPanel, "main"));
-
-        // TA functions
-        btnCreateProfile.addActionListener(e -> openCreateProfileDialog());
-        btnUploadCV.addActionListener(e -> openUploadCVDialog());
-
-        // MO functions
-        btnPublishJob.addActionListener(e -> openPublishJobDialog());
-    }
-
-    // Dialog: Create TA Profile
-    private void openCreateProfileDialog() {
-        JTextField sid = new JTextField();
-        JTextField name = new JTextField();
-        JTextField major = new JTextField();
-        JTextField phone = new JTextField();
-
-        Object[] form = {
-                "Student ID:", sid,
-                "Full Name:", name,
-                "Major:", major,
-                "Phone Number:", phone
-        };
-
-        int result = JOptionPane.showConfirmDialog(this, form, "Create TA Profile", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            java.util.Map<String, String> profile = new java.util.HashMap<>();
-            profile.put("studentId", sid.getText());
-            profile.put("name", name.getText());
-            profile.put("major", major.getText());
-            profile.put("phone", phone.getText());
-            profile.put("cvPath", "Not Uploaded");
-            profile.put("createTime", java.util.Calendar.getInstance().getTime().toString());
-
-            DataHandler.saveTAProfile(profile);
-            JOptionPane.showMessageDialog(this, "Profile created successfully!");
+        JButton[] buttons = {btnCreateProfile, btnUploadCV, btnViewJobs, btnApplyJob, btnCheckStatus};
+        for (JButton btn : buttons) {
+            btn.setFont(NORMAL_FONT);
+            taBtnPanel.add(btn);
         }
-    }
+        taModule.add(taBtnPanel, BorderLayout.NORTH);
 
-    // Dialog: Upload CV
-    private void openUploadCVDialog() {
-        JTextField sid = new JTextField();
-        JTextField path = new JTextField();
+        // 中间输入区
+        CardLayout taInputCard = new CardLayout();
+        JPanel taInputPanel = new JPanel(taInputCard);
+        taInputPanel.add(new JPanel(), "EMPTY");
 
-        Object[] form = {
-                "Bind to Student ID:", sid,
-                "CV File Path (TXT/CSV):", path
-        };
+        // [输入面板 1] Profile
+        JPanel profilePanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        profilePanel.setBorder(BorderFactory.createTitledBorder(null, "Create / Update Profile", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, TITLE_FONT));
+        JTextField txtStudentId = new JTextField(); JTextField txtName = new JTextField();
+        JTextField txtMajor = new JTextField(); JTextField txtPhone = new JTextField(); JTextField txtCVPath = new JTextField();
+        profilePanel.add(new JLabel("Student ID:")); profilePanel.add(txtStudentId);
+        profilePanel.add(new JLabel("Full Name:")); profilePanel.add(txtName);
+        profilePanel.add(new JLabel("Major:")); profilePanel.add(txtMajor);
+        profilePanel.add(new JLabel("Phone:")); profilePanel.add(txtPhone);
+        profilePanel.add(new JLabel("CV Path:")); profilePanel.add(txtCVPath);
+        JButton btnSubmitProfile = new JButton("Save Profile");
+        profilePanel.add(new JLabel()); profilePanel.add(btnSubmitProfile);
+        taInputPanel.add(profilePanel, "PROFILE");
 
-        int res = JOptionPane.showConfirmDialog(this, form, "Upload CV", JOptionPane.OK_CANCEL_OPTION);
-        if (res == JOptionPane.OK_OPTION) {
-            String studentId = sid.getText();
-            String cvPath = path.getText();
+        // [输入面板 2] Upload CV
+        JPanel cvPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        cvPanel.setBorder(BorderFactory.createTitledBorder(null, "Upload CV File", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, TITLE_FONT));
+        JTextField txtCVUploadPath = new JTextField();
+        cvPanel.add(new JLabel("CV File Path:")); cvPanel.add(txtCVUploadPath);
+        JButton btnSubmitCV = new JButton("Upload");
+        cvPanel.add(new JLabel()); cvPanel.add(btnSubmitCV);
+        taInputPanel.add(cvPanel, "CV_UPLOAD");
 
-            if (!Utils.checkFileFormat(cvPath)) {
-                JOptionPane.showMessageDialog(this, "Only TXT/CSV files are supported.");
+        // [输入面板 3] Apply Job
+        JPanel applyPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        applyPanel.setBorder(BorderFactory.createTitledBorder(null, "Apply for a Job", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, TITLE_FONT));
+        JTextField txtApplyStudentId = new JTextField(); JTextField txtApplyJobId = new JTextField();
+        applyPanel.add(new JLabel("Student ID:")); applyPanel.add(txtApplyStudentId);
+        applyPanel.add(new JLabel("Job ID:")); applyPanel.add(txtApplyJobId);
+        JButton btnSubmitApply = new JButton("Submit Application");
+        applyPanel.add(new JLabel()); applyPanel.add(btnSubmitApply);
+        taInputPanel.add(applyPanel, "APPLY_JOB");
+
+        // [输入面板 4] Status
+        JPanel statusPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        statusPanel.setBorder(BorderFactory.createTitledBorder(null, "Check Status", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, TITLE_FONT));
+        JTextField txtStatusStudentId = new JTextField();
+        statusPanel.add(new JLabel("Student ID:")); statusPanel.add(txtStatusStudentId);
+        JButton btnSubmitStatus = new JButton("Search");
+        statusPanel.add(new JLabel()); statusPanel.add(btnSubmitStatus);
+        taInputPanel.add(statusPanel, "CHECK_STATUS");
+
+        // --- 底部数据展示区（文本与表格双重展示） ---
+        JPanel displayPanel = new JPanel(new CardLayout());
+
+        taDisplay = new JTextArea(10, 50);
+        taDisplay.setEditable(false);
+        taDisplay.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        displayPanel.add(new JScrollPane(taDisplay), "TEXT_VIEW");
+
+        taTableModel = new DefaultTableModel();
+        taTable = new JTable(taTableModel);
+        taTable.setFont(NORMAL_FONT);
+        taTable.setRowHeight(25);
+        displayPanel.add(new JScrollPane(taTable), "TABLE_VIEW");
+
+        // 组装中间区
+        JPanel centerWrapper = new JPanel(new BorderLayout(10, 10));
+        centerWrapper.add(taInputPanel, BorderLayout.NORTH);
+        centerWrapper.add(displayPanel, BorderLayout.CENTER);
+        taModule.add(centerWrapper, BorderLayout.CENTER);
+
+        // ===================== TA事件绑定 =====================
+        CardLayout displayCard = (CardLayout) displayPanel.getLayout();
+
+        // 1. Profile
+        btnCreateProfile.addActionListener(e -> {
+            taInputCard.show(taInputPanel, "PROFILE");
+            displayCard.show(displayPanel, "TEXT_VIEW");
+            taDisplay.setText("Please fill in the form above to create or update your TA profile.");
+        });
+
+        btnSubmitProfile.addActionListener(e -> {
+            String studentId = txtStudentId.getText().trim();
+            if (Utils.isEmpty(studentId) || Utils.isEmpty(txtName.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Student ID and Name are required!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (!Utils.checkFileSize(cvPath)) {
-                JOptionPane.showMessageDialog(this, "File invalid or exceeds 10MB.");
+            String profile = String.format("{\n\"studentId\": \"%s\",\n\"name\": \"%s\",\n\"major\": \"%s\",\n\"phone\": \"%s\",\n\"cvPath\": \"%s\"\n}",
+                    studentId, txtName.getText().trim(), txtMajor.getText().trim(), txtPhone.getText().trim(), txtCVPath.getText().trim());
+
+            if (DataHandler.saveTAProfile(studentId, profile)) {
+                JOptionPane.showMessageDialog(this, "Profile saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                taDisplay.setText("Profile Updated:\n" + profile);
+                txtStudentId.setText(""); txtName.setText(""); txtMajor.setText(""); txtPhone.setText(""); txtCVPath.setText("");
+                taInputCard.show(taInputPanel, "EMPTY");
+            }
+        });
+
+        // 2. Upload CV (已修复：添加了事件监听与校验逻辑)
+        btnUploadCV.addActionListener(e -> {
+            taInputCard.show(taInputPanel, "CV_UPLOAD");
+            displayCard.show(displayPanel, "TEXT_VIEW");
+            taDisplay.setText("=== Upload CV ===\nPlease enter the path of your CV file (txt/csv, ≤10MB).");
+        });
+
+        btnSubmitCV.addActionListener(e -> {
+            String cvPath = txtCVUploadPath.getText().trim();
+            if (Utils.isEmpty(cvPath)) {
+                JOptionPane.showMessageDialog(this, "CV Path cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            JOptionPane.showMessageDialog(this, "CV uploaded successfully!\nBound to Student ID: " + studentId);
+            if (!Utils.validateCVFormat(cvPath)) {
+                JOptionPane.showMessageDialog(this, "Only .txt and .csv files are allowed!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!Utils.validateCVSize(cvPath)) {
+                JOptionPane.showMessageDialog(this, "File size exceeds 10MB!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "CV uploaded and validated!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            taDisplay.setText("CV Upload Success:\nPath: " + cvPath + "\nFormat: Valid\nSize: Valid");
+            txtCVUploadPath.setText("");
+            taInputCard.show(taInputPanel, "EMPTY");
+        });
+
+        // 3. View Jobs
+        btnViewJobs.addActionListener(e -> {
+            taInputCard.show(taInputPanel, "EMPTY");
+            displayCard.show(displayPanel, "TABLE_VIEW");
+            List<String> jobs = DataHandler.loadAllJobs();
+            updateTableData(taTableModel, jobs);
+        });
+
+        // 4. Apply Job
+        btnApplyJob.addActionListener(e -> {
+            taInputCard.show(taInputPanel, "APPLY_JOB");
+            displayCard.show(displayPanel, "TEXT_VIEW");
+            taDisplay.setText("Please enter your Student ID and the Job ID to apply.");
+        });
+
+        btnSubmitApply.addActionListener(e -> {
+            String studentId = txtApplyStudentId.getText().trim();
+            String jobId = txtApplyJobId.getText().trim();
+            Map<String, String> profile = DataHandler.loadTAProfile(studentId);
+            if (profile == null) {
+                JOptionPane.showMessageDialog(this, "Profile not found! Create it first.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String application = String.join(",", jobId, studentId, profile.get("name"), profile.get("major"), profile.get("phone"), profile.get("cvPath"), Utils.getCurrentTime(), "Pending");
+            if (DataHandler.submitApplication(application)) {
+                JOptionPane.showMessageDialog(this, "Application submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                taDisplay.setText("Application Submitted:\n" + application);
+                txtApplyStudentId.setText(""); txtApplyJobId.setText("");
+                taInputCard.show(taInputPanel, "EMPTY");
+            }
+        });
+
+        // 5. Check Status
+        btnCheckStatus.addActionListener(e -> {
+            taInputCard.show(taInputPanel, "CHECK_STATUS");
+            displayCard.show(displayPanel, "TABLE_VIEW");
+            taTableModel.setRowCount(0); // 初始化时清空表格
+            taTableModel.setColumnCount(0);
+        });
+
+        btnSubmitStatus.addActionListener(e -> {
+            String studentId = txtStatusStudentId.getText().trim();
+            if(Utils.isEmpty(studentId)){
+                JOptionPane.showMessageDialog(this, "Student ID cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            List<String> applications = DataHandler.loadAllApplications();
+            // 在 application_list.csv 中，StudentID 在第1列 (索引为1)
+            updateTableDataWithFilter(taTableModel, applications, 1, studentId);
+        });
+
+        return taModule;
+    }
+
+    // ===================== MO模块 (完整实现) =====================
+    private JPanel createMOModule() {
+        JPanel moModule = new JPanel(new BorderLayout(15, 15));
+
+        // 顶部：MO功能按钮区
+        JPanel moBtnPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JButton btnPublishJob = new JButton("1. Publish New Job");
+        JButton btnViewAllJobs = new JButton("2. View All Published Jobs");
+        JButton btnFilterApplicants = new JButton("3. Filter Applicants by Job ID");
+
+        JButton[] buttons = {btnPublishJob, btnViewAllJobs, btnFilterApplicants};
+        for (JButton btn : buttons) {
+            btn.setFont(NORMAL_FONT);
+            moBtnPanel.add(btn);
+        }
+        moModule.add(moBtnPanel, BorderLayout.NORTH);
+
+        // 中间：动态输入区
+        CardLayout moInputCard = new CardLayout();
+        JPanel moInputPanel = new JPanel(moInputCard);
+        moInputPanel.add(new JPanel(), "EMPTY");
+
+        // [输入面板 1] Publish New Job
+        JPanel publishPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        publishPanel.setBorder(BorderFactory.createTitledBorder(null, "Publish a New Job", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, TITLE_FONT));
+        JTextField txtCourseCode = new JTextField();
+        JTextField txtPosition = new JTextField();
+        JTextField txtHours = new JTextField();
+        JTextField txtRequirements = new JTextField();
+        publishPanel.add(new JLabel("Course Code:")); publishPanel.add(txtCourseCode);
+        publishPanel.add(new JLabel("Position:")); publishPanel.add(txtPosition);
+        publishPanel.add(new JLabel("Weekly Hours:")); publishPanel.add(txtHours);
+        publishPanel.add(new JLabel("Requirements:")); publishPanel.add(txtRequirements);
+        JButton btnSubmitPublish = new JButton("Publish Job");
+        publishPanel.add(new JLabel()); publishPanel.add(btnSubmitPublish);
+        moInputPanel.add(publishPanel, "PUBLISH_JOB");
+
+        // [输入面板 2] Filter Applicants
+        JPanel filterPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        filterPanel.setBorder(BorderFactory.createTitledBorder(null, "Filter Applicants", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, TITLE_FONT));
+        JTextField txtFilterJobId = new JTextField();
+        filterPanel.add(new JLabel("Job ID:")); filterPanel.add(txtFilterJobId);
+        JButton btnSubmitFilter = new JButton("Filter");
+        filterPanel.add(new JLabel()); filterPanel.add(btnSubmitFilter);
+        moInputPanel.add(filterPanel, "FILTER_APPLICANTS");
+
+        // 底部显示区
+        JPanel displayPanel = new JPanel(new CardLayout());
+
+        moDisplay = new JTextArea(10, 50);
+        moDisplay.setEditable(false);
+        moDisplay.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        displayPanel.add(new JScrollPane(moDisplay), "TEXT_VIEW");
+
+        moTableModel = new DefaultTableModel();
+        moTable = new JTable(moTableModel);
+        moTable.setFont(NORMAL_FONT);
+        moTable.setRowHeight(25);
+        displayPanel.add(new JScrollPane(moTable), "TABLE_VIEW");
+
+        // 组装
+        JPanel centerWrapper = new JPanel(new BorderLayout(10, 10));
+        centerWrapper.add(moInputPanel, BorderLayout.NORTH);
+        centerWrapper.add(displayPanel, BorderLayout.CENTER);
+        moModule.add(centerWrapper, BorderLayout.CENTER);
+
+        // ===================== MO事件绑定 =====================
+        CardLayout displayCard = (CardLayout) displayPanel.getLayout();
+
+        // 1. Publish Job
+        btnPublishJob.addActionListener(e -> {
+            moInputCard.show(moInputPanel, "PUBLISH_JOB");
+            displayCard.show(displayPanel, "TEXT_VIEW");
+            moDisplay.setText("Please fill in the job information and submit.\nJob ID will be generated automatically.");
+        });
+
+        btnSubmitPublish.addActionListener(e -> {
+            String course = txtCourseCode.getText().trim();
+            String position = txtPosition.getText().trim();
+            String hours = txtHours.getText().trim();
+            String requirements = txtRequirements.getText().trim();
+
+            if (Utils.isEmpty(course) || Utils.isEmpty(position) || Utils.isEmpty(hours)) {
+                JOptionPane.showMessageDialog(this, "Course/Position/Hours cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int newId = Utils.getMaxJobId() + 1;
+            String jobId = "J" + newId;
+            String jobData = String.join(",", jobId, course, position, hours, requirements);
+
+            if (DataHandler.publishJob(jobData)) {
+                JOptionPane.showMessageDialog(this, "Job published successfully!\nJob ID: " + jobId, "Success", JOptionPane.INFORMATION_MESSAGE);
+                moDisplay.setText("Published Job:\n" + jobData);
+                txtCourseCode.setText(""); txtPosition.setText(""); txtHours.setText(""); txtRequirements.setText("");
+                moInputCard.show(moInputPanel, "EMPTY");
+            }
+        });
+
+        // 2. View All Jobs
+        btnViewAllJobs.addActionListener(e -> {
+            moInputCard.show(moInputPanel, "EMPTY");
+            displayCard.show(displayPanel, "TABLE_VIEW");
+            List<String> jobs = DataHandler.loadAllJobs();
+            updateTableData(moTableModel, jobs);
+        });
+
+        // 3. Filter Applicants
+        btnFilterApplicants.addActionListener(e -> {
+            moInputCard.show(moInputPanel, "FILTER_APPLICANTS");
+            displayCard.show(displayPanel, "TABLE_VIEW");
+            moTableModel.setRowCount(0);
+            moTableModel.setColumnCount(0);
+        });
+
+        btnSubmitFilter.addActionListener(e -> {
+            String jobId = txtFilterJobId.getText().trim();
+            if (Utils.isEmpty(jobId)) {
+                JOptionPane.showMessageDialog(this, "Job ID cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            List<String> applications = DataHandler.loadAllApplications();
+            // 在 application_list.csv 中，JobID 在第0列 (索引为0)
+            updateTableDataWithFilter(moTableModel, applications, 0, jobId);
+        });
+
+        return moModule;
+    }
+
+    // ===================== 核心通用方法：解析CSV至表格 =====================
+    private void updateTableData(DefaultTableModel model, List<String> csvLines) {
+        model.setRowCount(0); // 清空旧数据
+        model.setColumnCount(0);
+        if (csvLines == null || csvLines.isEmpty()) return;
+
+        // 设置表头
+        String[] headers = csvLines.get(0).split(",");
+        model.setColumnIdentifiers(headers);
+
+        // 填入数据
+        for (int i = 1; i < csvLines.size(); i++) {
+            model.addRow(csvLines.get(i).split(","));
         }
     }
 
-    // Dialog: Publish Job
-    private void openPublishJobDialog() {
-        JTextField jobName = new JTextField();
-        JTextField jobReq = new JTextField();
-        JTextField num = new JTextField();
-        JTextField deadline = new JTextField();
-        JTextField publisher = new JTextField();
+    private void updateTableDataWithFilter(DefaultTableModel model, List<String> csvLines, int filterColIndex, String filterValue) {
+        model.setRowCount(0);
+        model.setColumnCount(0);
+        if (csvLines == null || csvLines.isEmpty()) return;
 
-        Object[] form = {
-                "Position Title:", jobName,
-                "Job Requirements:", jobReq,
-                "Number of Openings:", num,
-                "Deadline (yyyy-MM-dd):", deadline,
-                "Publisher Name:", publisher
-        };
+        String[] headers = csvLines.get(0).split(",");
+        model.setColumnIdentifiers(headers);
 
-        int res = JOptionPane.showConfirmDialog(this, form, "Publish TA Position", JOptionPane.OK_CANCEL_OPTION);
-        if (res == JOptionPane.OK_OPTION) {
-            try {
-                String jobId = "J" + (int) (Math.random() * 1000 + 1000);
-                String info = String.join(",",
-                        jobId,
-                        jobName.getText(),
-                        jobReq.getText(),
-                        num.getText(),
-                        deadline.getText(),
-                        publisher.getText()
-                );
-                DataHandler.publishJob(info);
-                JOptionPane.showMessageDialog(this, "Position published successfully!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Input format error.");
+        for (int i = 1; i < csvLines.size(); i++) {
+            String[] row = csvLines.get(i).split(",");
+            if (row.length > filterColIndex && row[filterColIndex].equals(filterValue)) {
+                model.addRow(row);
             }
         }
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "No records found for: " + filterValue, "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
-    // Run UI
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            try {
+                // 使用系统原生的UI风格，让界面在Windows/Mac下看起来更协调
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             new RecruitmentUI().setVisible(true);
         });
     }
