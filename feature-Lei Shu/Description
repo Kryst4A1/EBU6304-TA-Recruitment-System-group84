@@ -1,1 +1,51 @@
+feat(ta-apply): Implement TA job browsing, skill matching, and application flow
+Collaborator: @Sshuu1
+Student ID: 231224963
+Name: Lei Shu
+Role: Member
+
+Professional concepts:
+Job search, skill matching, application workflow, application status tracking
+
+Completed tasks:
+- [✅] Implemented TA access to all OPEN jobs
+- [✅] Implemented keyword-based job search
+- [✅] Implemented job detail page
+- [✅] Implemented skill matching score calculation
+- [✅] Displayed matched skills and missing skills
+- [✅] Implemented application statement submission
+- [✅] Prevented duplicate applications for the same job
+- [✅] Implemented TA application status tracking
+
+Collaboration with other members:
+- Depends on Shidi Yan's current logged-in TA user
+- Reads Zijun Tang's TA Profile skill data
+- Reads Sicheng Meng's published OPEN job data
+- Submitted Applications enter Yusi Wang's MO review list
+- After Yusi Wang updates the application status, the new status is shown in the TA My Applications page
+
+Testing:
+- TA users can only see OPEN jobs
+- Job search tested successfully
+- Skill matching score calculation tested successfully
+- Matched skills and missing skills are displayed correctly
+- Duplicate applications are rejected
+- Status changes made by MO are synchronised on the TA side
+
+Core code files:
+- TAJobsServlet.java
+- TAJobDetailServlet.java
+- TAApplyServlet.java
+- TAApplicationsServlet.java
+- MatchService.java
+- DefaultMatchService.java
+- SkillMatch.java
+- jobs.jsp
+- job-detail.jsp
+- applications.jsp
+
+Shared code files:
+- ApplicationService.java
+- impl/DefaultApplicationService.java
+- applications.csv
 
