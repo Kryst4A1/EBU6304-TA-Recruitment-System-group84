@@ -1,0 +1,28 @@
+feat(admin): 定义AdminService管理员业务接口
+协作人: @Meng-1211(23122)
+专业概念: 业务接口设计、数据聚合、权限管理
+完成内容:
+- [✅] 定义AdminService接口
+- [✅] 添加用户管理方法：getAllUsers、updateUserRole
+- [✅] 添加系统统计方法：getSystemStatistics
+测试情况: 接口编译通过，方法定义符合业务需求
+核心代码文件:
+- src/main/java/service/AdminService.java
+
+
+
+package service;
+
+import model.Apply;
+import model.Job;
+import model.User;
+import java.util.List;
+import java.util.Map;
+
+public interface AdminService {
+    List<User> getAllUsers();
+    boolean updateUserRole(Integer userId, Integer role, Integer adminId);
+    List<Job> getAllJobs();
+    List<Apply> getAllApplies();
+    Map<String, Integer> getSystemStatistics();
+}
