@@ -1,0 +1,33 @@
+feat(core): 设计并实现自定义异常体系
+协作人: @全体成员
+专业概念: 自定义异常、异常链、错误码设计
+完成内容:
+- [✅] 设计三级自定义异常体系
+- [✅] 实现BusinessException业务异常类
+- [✅] 实现DataException数据异常类
+- [✅] 实现AuthException权限异常类
+- [✅] 为每个异常添加错误码和错误信息
+测试情况: 异常类编译通过，可正常抛出和捕获
+核心代码文件:
+- src/main/java/core/exception/BusinessException.java
+
+
+package core.exception;
+
+public class BusinessException extends RuntimeException {
+    private int code;
+    private String message;
+
+    public BusinessException(int code, String message) {
+        super(message);
+        this.code = code;
+        this.message = message;
+    }
+
+    public int getCode() { return code; }
+    public String getMessage() { return message; }
+}
+
+
+
+
