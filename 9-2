@@ -1,0 +1,27 @@
+feat(mo): 定义MOService业务接口
+协作人: @ZJ-Tang(231224181)
+专业概念: 业务接口设计、权限控制、数据统计
+完成内容:
+- [✅] 定义MOService接口
+- [✅] 添加岗位管理相关方法：createJob、updateJob、deleteJob、getJobsByMoId
+- [✅] 添加申请审核相关方法：getAppliesByMoId、reviewApply
+测试情况: 接口编译通过，方法定义符合业务需求
+核心代码文件:
+- src/main/java/service/MOService.java
+
+
+
+package service;
+
+import model.Apply;
+import model.Job;
+import java.util.List;
+
+public interface MOService {
+    List<Job> getJobsByMoId(Integer moId);
+    boolean createJob(Job job);
+    boolean updateJob(Job job);
+    boolean deleteJob(Integer jobId, Integer moId);
+    List<Apply> getAppliesByMoId(Integer moId);
+    boolean reviewApply(Integer applyId, String status, Integer moId);
+}
