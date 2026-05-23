@@ -1,1 +1,43 @@
+feat(profile): Implement TA profile, CV upload, and profile data support
+Collaborator: @ZJ-Tang
+Student ID: 231224181
+Name: Zijun Tang
+Role: Member
+
+Professional concepts:
+Profile management, multipart file upload, CSV persistence, file validation
+
+Completed tasks:
+- [✅] Implemented TA Applicant Profile creation and editing
+- [✅] Supported full name, email, major, year, availability, skills, experience, and self-introduction
+- [✅] Implemented CV upload
+- [✅] Implemented CV preview
+- [✅] Restricted CV file types to PDF, DOC, DOCX, and TXT
+- [✅] Automatically created a basic profile after TA registration
+- [✅] Provided TA skill data for the skill matching module
+- [✅] Provided applicant profile and CV data for the MO review module
+
+Collaboration with other members:
+- Depends on Shidi Yan's login and TA access control
+- Yutian Cheng reads Profile skills for job matching
+- Yusi Wang reads Profile and CV data when reviewing applicants
+- If a TA has not completed the profile, Yutian Cheng's job matching module shows missing skill information
+
+Testing:
+- Profile saving tested successfully
+- Email format and required field validation tested successfully
+- CV upload and preview tested successfully
+- Invalid file types are rejected
+- Yutian Cheng's skill matching module correctly reads TA Profile skills
+- Yusi Wang's review page correctly displays TA Profile and CV
+
+Core code files:
+- src/main/java/cn/bupt/tarecruitment/servlet/TAProfileServlet.java
+- src/main/java/cn/bupt/tarecruitment/servlet/CVPreviewServlet.java
+- src/main/java/cn/bupt/tarecruitment/service/ProfileService.java
+- src/main/java/cn/bupt/tarecruitment/service/impl/DefaultProfileService.java
+- src/main/java/cn/bupt/tarecruitment/model/Profile.java
+- src/main/webapp/WEB-INF/jsp/ta/profile.jsp
+- data/profiles.csv
+- data/uploads/
 
