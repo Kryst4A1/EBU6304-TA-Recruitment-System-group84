@@ -1,0 +1,97 @@
+feat(mo): 实现MO端岗位管理功能
+协作人: @全体成员
+专业概念: Servlet编程、表单处理、列表展示
+完成内容:
+- [✅] 实现JobServlet，处理岗位创建和删除请求
+- [✅] 开发jobManage.jsp岗位管理页面
+- [✅] 添加发布新岗位表单
+- [✅] 添加删除岗位确认提示
+测试情况: 岗位发布和删除功能正常
+核心代码文件:
+- src/main/java/servlet/JobServlet.java
+
+package servlet;
+
+import model.Job;
+import model.User;
+import service.MOService;
+import service.impl.MOServiceImpl;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet("/mo/job")
+public class JobServlet extends HttpServlet {
+    private MOService moService = new MOServiceImpl();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        List<Job> jobList = moService.getJobsByMoId(user.getId());
+        req.setAttribute("jobList", jobList);
+        req.getRequestDispatcher("/mo/jobManage.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        String action = req.getParameter("action");
+        
+        if ("create".equals(action)) {
+            Job job = new Job();
+            job.setTitle(req.getParameter("title"));
+            job.setDescription(req.getParameter("description"));
+            job.setRequirements(req.getParameter("requirements"));
+            job.setMoId(user.getId());
+            
+            try {
+                boolean success = moService.createJob(job);
+                if (success) {
+                    req.setAttribute("successMsg", "岗位创建成功");
+                } else {
+                    req.setAttribute("errorMsg", "岗位创建失败");
+                }
+            } catch (Exception e) {
+                req.setAttribute("errorMsg", e.getMessage());
+            }
+        } else if ("delete".equals(action)) {
+            Integer jobId = Integer.parseInt(req.getParameter("jobId"));
+            try {
+                boolean success = moService.deleteJob(jobId, user.getId());
+                if (success) {
+                    req.setAttribute("successMsg", "岗位删除成功");
+                } else {
+                    req.setAttribute("errorMsg", "岗位删除失败");
+                }
+            } catch (Exception e) {
+                req.setAttribute("errorMsg", e.getMessage());
+            }
+        }
+        
+        // 重新查询岗位列表并返回页面
+        List<Job> jobList = moService.getJobsByMoId(user.getId());
+        req.setAttribute("jobList", jobList);
+        req.getRequestDispatcher("/mo/jobManage.jsp").forward(req, resp);
+    }
+}
+
+
+
+- src/main/webapp/mo/jobManage.jsp
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<head>
+    <title>岗位管理 - MO端</title>
+    <style>
+        .container { width: 800px; margin: 50px auto; padding: 20
