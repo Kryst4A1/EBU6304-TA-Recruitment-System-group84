@@ -1,0 +1,22 @@
+feat(dao): 定义BaseDAO通用数据访问接口
+协作人: @chengdatian(231224424)
+专业概念: DAO模式、泛型编程、面向接口编程
+完成内容:
+- [✅] 定义泛型BaseDAO接口，封装通用CRUD方法
+- [✅] 为所有方法添加详细注释，说明入参出参含义
+- [✅] 遵循开闭原则，接口设计支持扩展
+测试情况: 接口编译通过，符合面向接口编程规范
+核心代码文件:
+- src/main/java/dao/BaseDAO.java
+
+package dao;
+
+import java.util.List;
+
+public interface BaseDAO<T, ID> {
+    T findById(ID id);
+    List<T> findAll();
+    boolean save(T entity);
+    boolean update(T entity);
+    boolean deleteById(ID id);
+}
