@@ -1,0 +1,191 @@
+feat(mo): 优化MO端页面导航与用户体验
+协作人: @全体成员
+专业概念: 前端优化、用户体验、导航设计
+完成内容:
+- [✅] 在所有MO端页面添加统一导航栏
+- [✅] 统一页面样式和提示信息样式
+- [✅] 优化页面布局，提升用户体验
+测试情况: 所有页面导航正常，风格统一
+核心代码文件:
+- src/main/webapp/mo/jobManage.jsp（修改）
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<head>
+    <title>岗位管理 - MO端</title>
+    <style>
+        .container { width: 800px; margin: 50px auto; padding: 20px; }
+        .job-card { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .job-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .job-info { color: #666; margin-bottom: 10px; }
+        .delete-btn { padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .create-form { margin-bottom: 30px; padding: 20px; border: 1px solid #eee; border-radius: 5px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        textarea { height: 100px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .success { color: green; margin-bottom: 10px; }
+        .error { color: red; margin-bottom: 10px; }
+        .nav { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .nav a { margin-right: 20px; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/mo/job">岗位管理</a>
+            <a href="/mo/applyList">申请列表</a>
+            <a href="/logout" style="float: right;">退出登录</a>
+        </div>
+        
+        <h2>发布新岗位</h2>
+        <c:if test="${not empty successMsg}">
+            <div class="success">${successMsg}</div>
+        </c:if>
+        <c:if test="${not empty errorMsg}">
+            <div class="error">${errorMsg}</div>
+        </c:if>
+        
+        <div class="create-form">
+            <form action="/mo/job" method="post">
+                <input type="hidden" name="action" value="create">
+                <div class="form-group">
+                    <label>岗位名称</label>
+                    <input type="text" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label>岗位描述</label>
+                    <textarea name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>岗位要求</label>
+                    <textarea name="requirements" required></textarea>
+                </div>
+                <button type="submit">发布岗位</button>
+            </form>
+        </div>
+        
+        <h2>我的岗位列表</h2>
+        <c:forEach items="${jobList}" var="job">
+            <div class="job-card">
+                <div class="job-title">${job.title}</div>
+                <div class="job-info">
+                    <p><strong>岗位描述：</strong>${job.description}</p>
+                    <p><strong>岗位要求：</strong>${job.requirements}</p>
+                    <p><strong>发布时间：</strong>${job.createTime}</p>
+                    <p><strong>状态：</strong>${job.status == 1 ? '已发布' : '已关闭'}</p>
+                </div>
+                <form action="/mo/job" method="post" style="display: inline;">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="jobId" value="${job.id}">
+                    <button type="submit" class="delete-btn" onclick="return confirm('确定要删除该岗位吗？所有相关申请也会被删除')">删除岗位</button>
+                </form>
+            </div>
+        </c:forEach>
+        
+        <c:if test="${empty jobList}">
+            <p>暂无发布的岗位</p>
+        </c:if>
+    </div>
+</body>
+</html>
+
+
+
+- src/main/webapp/mo/applyList.jsp（修改）
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<head>
+    <title>申请列表 - MO端</title>
+    <style>
+        .container { width: 900px; margin: 50px auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .accept-btn { padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px; }
+        .reject-btn { padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .success { color: green; margin-bottom: 10px; }
+        .error { color: red; margin-bottom: 10px; }
+        .nav { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .nav a { margin-right: 20px; text-decoration: none; color: #007bff; }
+        .status-pending { color: #ffc107; }
+        .status-accepted { color: #28a745; }
+        .status-rejected { color: #dc3545; }
+        .status-canceled { color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/mo/job">岗位管理</a>
+            <a href="/mo/applyList">申请列表</a>
+            <a href="/logout" style="float: right;">退出登录</a>
+        </div>
+        
+        <h2>收到的申请</h2>
+        <c:if test="${not empty successMsg}">
+            <div class="success">${successMsg}</div>
+        </c:if>
+        <c:if test="${not empty errorMsg}">
+            <div class="error">${errorMsg}</div>
+        </c:if>
+        
+        <table>
+            <tr>
+                <th>申请ID</th>
+                <th>用户ID</th>
+                <th>岗位ID</th>
+                <th>申请时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            <c:forEach items="${applyList}" var="apply">
+                <tr>
+                    <td>${apply.id}</td>
+                    <td>${apply.userId}</td>
+                    <td>${apply.jobId}</td>
+                    <td>${apply.createTime}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${apply.status == 'PENDING'}">
+                                <span class="status-pending">待审核</span>
+                            </c:when>
+                            <c:when test="${apply.status == 'ACCEPTED'}">
+                                <span class="status-accepted">已录取</span>
+                            </c:when>
+                            <c:when test="${apply.status == 'REJECTED'}">
+                                <span class="status-rejected">已拒绝</span>
+                            </c:when>
+                            <c:when test="${apply.status == 'CANCELED'}">
+                                <span class="status-canceled">已撤销</span>
+                            </c:when>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:if test="${apply.status == 'PENDING'}">
+                            <form action="/mo/review" method="post" style="display: inline;">
+                                <input type="hidden" name="applyId" value="${apply.id}">
+                                <input type="hidden" name="status" value="ACCEPTED">
+                                <button type="submit" class="accept-btn">录取</button>
+                            </form>
+                            <form action="/mo/review" method="post" style="display: inline;">
+                                <input type="hidden" name="applyId" value="${apply.id}">
+                                <input type="hidden" name="status" value="REJECTED">
+                                <button type="submit" class="reject-btn">拒绝</button>
+                            </form>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        
+        <c:if test="${empty applyList}">
+            <p>暂无收到的申请</p>
+        </c:if>
+    </div>
+</body>
+</html>
