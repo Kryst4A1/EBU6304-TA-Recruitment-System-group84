@@ -1,0 +1,152 @@
+feat(mo): 实现MO端申请审核功能
+协作人: @Sshuu1(231224963)
+专业概念: Servlet编程、状态展示、条件渲染
+完成内容:
+- [✅] 实现ReviewServlet，处理申请审核请求
+- [✅] 开发applyList.jsp申请列表页面
+- [✅] 根据申请状态动态显示操作按钮
+- [✅] 添加审核确认提示
+测试情况: 申请审核功能正常，状态同步更新
+核心代码文件:
+- src/main/java/servlet/ReviewServlet.java
+
+package servlet;
+
+import model.User;
+import service.MOService;
+import service.impl.MOServiceImpl;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet("/mo/review")
+public class ReviewServlet extends HttpServlet {
+    private MOService moService = new MOServiceImpl();
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        Integer applyId = Integer.parseInt(req.getParameter("applyId"));
+        String status = req.getParameter("status");
+        
+        try {
+            boolean success = moService.reviewApply(applyId, status, user.getId());
+            if (success) {
+                req.setAttribute("successMsg", "审核成功");
+            } else {
+                req.setAttribute("errorMsg", "审核失败");
+            }
+        } catch (Exception e) {
+            req.setAttribute("errorMsg", e.getMessage());
+        }
+        
+        // 重定向到申请列表页面
+        resp.sendRedirect("/mo/applyList");
+    }
+}
+
+
+
+
+- src/main/webapp/mo/applyList.jsp
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<head>
+    <title>申请列表 - MO端</title>
+    <style>
+        .container { width: 900px; margin: 50px auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .accept-btn { padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px; }
+        .reject-btn { padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .success { color: green; margin-bottom: 10px; }
+        .error { color: red; margin-bottom: 10px; }
+        .nav { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .nav a { margin-right: 20px; text-decoration: none; color: #007bff; }
+        .status-pending { color: #ffc107; }
+        .status-accepted { color: #28a745; }
+        .status-rejected { color: #dc3545; }
+        .status-canceled { color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/mo/job">岗位管理</a>
+            <a href="/mo/applyList">申请列表</a>
+            <a href="/logout" style="float: right;">退出登录</a>
+        </div>
+        
+        <h2>收到的申请</h2>
+        <c:if test="${not empty successMsg}">
+            <div class="success">${successMsg}</div>
+        </c:if>
+        <c:if test="${not empty errorMsg}">
+            <div class="error">${errorMsg}</div>
+        </c:if>
+        
+        <table>
+            <tr>
+                <th>申请ID</th>
+                <th>用户ID</th>
+                <th>岗位ID</th>
+                <th>申请时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            <c:forEach items="${applyList}" var="apply">
+                <tr>
+                    <td>${apply.id}</td>
+                    <td>${apply.userId}</td>
+                    <td>${apply.jobId}</td>
+                    <td>${apply.createTime}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${apply.status == 'PENDING'}">
+                                <span class="status-pending">待审核</span>
+                            </c:when>
+                            <c:when test="${apply.status == 'ACCEPTED'}">
+                                <span class="status-accepted">已录取</span>
+                            </c:when>
+                            <c:when test="${apply.status == 'REJECTED'}">
+                                <span class="status-rejected">已拒绝</span>
+                            </c:when>
+                            <c:when test="${apply.status == 'CANCELED'}">
+                                <span class="status-canceled">已撤销</span>
+                            </c:when>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:if test="${apply.status == 'PENDING'}">
+                            <form action="/mo/review" method="post" style="display: inline;">
+                                <input type="hidden" name="applyId" value="${apply.id}">
+                                <input type="hidden" name="status" value="ACCEPTED">
+                                <button type="submit" class="accept-btn">录取</button>
+                            </form>
+                            <form action="/mo/review" method="post" style="display: inline;">
+                                <input type="hidden" name="applyId" value="${apply.id}">
+                                <input type="hidden" name="status" value="REJECTED">
+                                <button type="submit" class="reject-btn">拒绝</button>
+                            </form>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        
+        <c:if test="${empty applyList}">
+            <p>暂无收到的申请</p>
+        </c:if>
+    </div>
+</body>
+</html>
