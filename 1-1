@@ -8,7 +8,9 @@ feat(core): 创建Maven项目骨架并配置核心依赖
 - [✅] 配置maven-war-plugin，支持无web.xml打包
 测试情况: 所有成员可正常编译项目，依赖下载成功
 核心代码文件:
-- pom.xml<?xml version="1.0" encoding="UTF-8"?>
+- pom.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
