@@ -32,12 +32,12 @@ Testing:
 - Yusi Wang's review page correctly displays TA Profile and CV
 
 Core code files:
-- src/main/java/cn/bupt/tarecruitment/servlet/TAProfileServlet.java
-- src/main/java/cn/bupt/tarecruitment/servlet/CVPreviewServlet.java
-- src/main/java/cn/bupt/tarecruitment/service/ProfileService.java
-- src/main/java/cn/bupt/tarecruitment/service/impl/DefaultProfileService.java
-- src/main/java/cn/bupt/tarecruitment/model/Profile.java
-- src/main/webapp/WEB-INF/jsp/ta/profile.jsp
-- data/profiles.csv
-- data/uploads/
+TAProfileServlet.java
+CVPreviewServlet.java
+ProfileService.java
+DefaultProfileService.java
+Profile.java
+profile.jsp
+profiles.csv
+
 
