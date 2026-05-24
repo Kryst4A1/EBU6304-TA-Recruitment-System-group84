@@ -1,0 +1,4 @@
+userId,fullName,email,major,year,availability,skills,experience,introduction,cvFileName
+u-ta-1,Alice Chen,alice@example.com,Computer Science,Year 3,"Mon morning; Wed afternoon","Java; software engineering; data structures; tutoring","Peer tutor for Java programming lab","I enjoy helping students understand programming fundamentals.",
+u-ta-2,Bob Zhang,bob@example.com,Electronic Engineering,Year 4,"Tue afternoon; Thu morning","circuits; digital logic; Python; laboratory safety","Lab demonstrator for digital design","I am familiar with lab supervision and safety procedures.",
+u-ta-3,Cindy Liu,cindy@example.com,Computer Science,Year 2,"Fri morning; weekend","Python; statistics; machine learning; invigilation","Supported exam invigilation once","I can support coursework marking and supervised activities.",

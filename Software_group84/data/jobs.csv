@@ -1,0 +1,5 @@
+id,ownerId,moduleCode,title,semester,description,requiredSkills,hoursPerWeek,status,createdAt
+j-1,u-mo-1,EBU6304,Software Engineering TA,2026 Spring,"Support weekly labs; answer student questions; help with agile project demos.","Java; software engineering; tutoring",6,OPEN,2026-05-01T09:00:00
+j-2,u-mo-1,EBU4201,Digital Logic Lab TA,2026 Spring,"Assist lab setup and supervise digital logic experiments.","digital logic; circuits; laboratory safety",5,OPEN,2026-05-02T09:00:00
+j-3,u-mo-1,ACT001,Exam Invigilation Assistant,2026 Spring,"Support exam-room preparation and invigilation tasks.","invigilation; communication; punctuality",3,OPEN,2026-05-03T09:00:00
+j-4,u-mo-1,EBU5308,Data Analytics TA,2026 Spring,"Help with Python practicals and data-analysis exercises.","Python; statistics; machine learning",4,CLOSED,2026-05-04T09:00:00
