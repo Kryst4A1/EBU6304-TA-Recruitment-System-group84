@@ -1,0 +1,51 @@
+feat(mo-review): Implement MO applicant review, status transition, and Assignment sync
+Collaborator: @Meng-1211
+Student ID: 231224240
+Name: Sicheng Meng
+Role: Member
+
+Professional concepts:
+Application review, status transition, assignment synchronisation, recruitment traceability
+
+Completed tasks:
+- [✅] Implemented applicant list for each MO job
+- [✅] Implemented applicant detail review page
+- [✅] Displayed TA Profile, CV, application statement, match score, and match explanation
+- [✅] Implemented Shortlist operation
+- [✅] Implemented Select operation
+- [✅] Implemented Reject operation
+- [✅] Automatically generated Assignment workload record after selection
+- [✅] Updated or removed Assignment when status changes from Selected to another status
+- [✅] Ensured TA-side application status is synchronised
+
+Collaboration with other members:
+- Depends on Shidi Yan's MO access control and current user information
+- Reads Zijun Tang's TA Profile and CV data
+- Reads Lei Shu's Application records
+- Reads Yutian Cheng's JobPost data
+- Generated Assignment records are used by Yusi Wang's Admin workload module
+- After this module updates application status, Lei Shu's TA My Applications page shows the new status
+
+Testing:
+- MO can view applicants for their own jobs
+- MO cannot review applicants for another MO's jobs
+- Shortlist, Select, and Reject operations tested successfully
+- Selecting an applicant creates the correct record in assignments.csv
+- Assignment is synchronised when the status changes
+- TA-side application status is consistent with MO-side status
+- Admin workload module can read selected assignment results
+
+Core code files:
+- MOApplicantsServlet.java
+- MOApplicantReviewServlet.java
+- Application.java
+- Assignment.java
+- applicants.jsp
+- applicant-detail.jsp
+
+Shared code files:
+- ApplicationService.java
+- DefaultApplicationService.java
+- applications.csv
+- assignments.csv
+
