@@ -1,0 +1,58 @@
+feat(admin-test): Implement Admin workload, application audit, testing, and global UI
+Collaborator: @Wallacewang88
+Student ID: 231224158
+Name: Yusi Wang
+Role: Member
+
+Professional concepts:
+Workload calculation, audit trail, CSV repository, system testing, UI consistency
+
+Completed tasks:
+- [✅] Implemented Admin view for all TA workload
+- [✅] Implemented TA overload warning
+- [✅] Implemented workload balancing advice
+- [✅] Implemented Admin view for all application records
+- [✅] Implemented application filtering by status
+- [✅] Implemented keyword search for application records
+- [✅] Improved global CSS and page style consistency
+- [✅] Wrote core logic tests
+- [✅] Prepared README, user manual, design and testing documentation
+- [✅] Prepared final checklist
+
+Collaboration with other members:
+- Depends on Shidi Yan's Admin access control
+- Reads Lei Shu's Application records
+- Reads Yutian Cheng's JobPost records
+- Reads Sicheng Meng's Assignment workload records
+- Uses tests to verify the data flow among Zijun Tang, Lei Shu, Yutian Cheng, and Sicheng Meng's modules
+- Global UI styles affect JSP pages developed by all members
+
+Testing:
+- Admin workload calculation tested successfully
+- Overload warning and workload recommendation tested successfully
+- Application audit filtering tested successfully
+- CSV reading and writing, including commas, quotes, and line breaks, tested successfully
+- End-to-end flow from TA application to MO selection and Admin workload display tested successfully
+- ./scripts/run_tests.sh executed successfully
+
+Core code files:
+- AdminWorkloadServlet.java
+- AdminApplicationsServlet.java
+- WorkloadService.java
+- DefaultWorkloadService.java
+- WorkloadRow.java
+- WorkloadRecommendation.java
+- CsvDataStore.java
+- CsvUtils.java
+- workload.jsp
+- applications.jsp
+- app.css
+- CoreLogicTest.java
+- README.md
+- USER_MANUAL.md
+- DESIGN_AND_TESTING.md
+- FINAL_CHECKLIST.md
+- scripts/build_war.sh
+- scripts/run_tests.sh
+
+
