@@ -1,6 +1,0 @@
-id,jobId,taUserId,status,statement,createdAt
-app-1,j-1,u-ta-1,SELECTED,"I have Java tutoring experience and can help with agile project labs.",2026-05-06T10:00:00
-app-2,j-2,u-ta-2,SELECTED,"I have digital logic and lab safety experience.",2026-05-06T11:00:00
-app-3,j-3,u-ta-3,SHORTLISTED,"I have previous invigilation experience.",2026-05-07T10:30:00
-app-4,j-3,u-ta-1,SELECTED,"I am punctual and available during exam weeks.",2026-05-07T11:00:00
-app-5,j-4,u-ta-1,SELECTED,"I can also help with Python and data-analysis exercises.",2026-05-08T10:15:00
