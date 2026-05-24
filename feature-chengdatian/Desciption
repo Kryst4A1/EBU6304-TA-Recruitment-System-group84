@@ -39,5 +39,5 @@ Core code files:
 - JobPost.java
 - jobs.jsp
 - job-form.jsp
-- data/jobs.csv
+- jobs.csv
 
