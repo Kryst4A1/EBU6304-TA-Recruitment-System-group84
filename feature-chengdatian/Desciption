@@ -1,1 +1,43 @@
+feat(mo-job): Implement MO job posting, editing, closing, and reopening
+Collaborator: @chengdatian
+Student ID: 231224424
+Name: Yutian Cheng
+Role: Member
+
+Professional concepts:
+Job CRUD, job status management, MO ownership control, form validation
+
+Completed tasks:
+- [✅] Implemented MO job creation
+- [✅] Implemented job listing for the current MO
+- [✅] Implemented job editing
+- [✅] Implemented job closing
+- [✅] Implemented job reopening
+- [✅] Validated module code, title, semester, weekly hours, required skills, and description
+- [✅] Restricted MO users to managing only their own job posts
+- [✅] Provided OPEN job data for the TA side
+- [✅] Provided job context for the MO applicant review flow
+
+Collaboration with other members:
+- Depends on Shidi Yan's current logged-in MO user and MO access control
+- Lei Shu can only browse jobs created by this module with OPEN status
+- Lei Shu's application submission references jobId from this module
+- Yusi Wang reviews applicants according to the jobId created here
+- Zijun Tang displays job and MO information in the Admin application audit page
+
+Testing:
+- Job creation and editing tested successfully
+- Closed jobs no longer appear on the TA side
+- Reopened jobs become visible again on the TA side
+- Non-owner MO users cannot edit the job
+- Weekly hours validation tested successfully
+
+Core code files:
+- MOJobsServlet.java
+- JobService.java
+- DefaultJobService.java
+- JobPost.java
+- jobs.jsp
+- job-form.jsp
+- data/jobs.csv
 
